@@ -16,6 +16,7 @@ import { AuthenticationService } from './_services/authentication.service';
 import { UserService } from './_services/user.service';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/index';
+import { NoContentComponent } from './no-content/no-content.component';
 
 import {
   ApplicationRef
@@ -47,7 +48,8 @@ type StoreType = {
     declarations: [
         AppComponent,
         LoginComponent,
-        HomeComponent
+        HomeComponent,
+        NoContentComponent
     ],
     providers: [
         AuthGuard,

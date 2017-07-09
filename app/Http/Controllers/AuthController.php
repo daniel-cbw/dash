@@ -7,6 +7,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\JWTAuth;
+//use JWTAuth;
 
 class AuthController extends Controller
 {
@@ -18,6 +19,8 @@ class AuthController extends Controller
     public function __construct(JWTAuth $jwt)
     {
         $this->jwt = $jwt;
+        //$this->middleware('jwt.auth', ['only' => ['signIn']]);
+        //$this->middleware('jwt.auth',['only'=>['refresh']]);
     }
 
     public function register(Request $request){
@@ -67,6 +70,7 @@ class AuthController extends Controller
             }
         } catch (TokenExpiredException $e) {
             return response()->json(['token_expired'], $e->getStatusCode());
+            $this->refresh( $request );
         } catch (TokenInvalidException $e) {
             return response()->json(['token_invalid'], $e->getStatusCode());
         } catch (JWTException $e) {
@@ -74,5 +78,65 @@ class AuthController extends Controller
         }
 
         return response()->json(compact('token'));
+    }
+
+    public function getUser(Request $request) {
+
+      try {
+
+          if (! $user = \JWTAuth::parseToken()->authenticate()) {
+              return response()->json(['user_not_found'], 404);
+          }
+
+      } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+
+          return response()->json(['token_expired'], $e->getStatusCode());
+
+      } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+
+          return response()->json(['token_invalid'], $e->getStatusCode());
+
+      } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+
+          return response()->json(['token_absent'], $e->getStatusCode());
+
+      }
+
+      // the token is valid and we have found the user via the sub claim
+      return response()->json(compact('user'));
+    }
+
+    public function refresh(Request $request)
+    {
+
+        try {
+            if ( $user = \JWTAuth::parseToken()->authenticate()) {
+                
+            
+                $token = \JWTAuth::getToken();
+
+                $newToken = \JWTAuth::refresh($token);
+                return json_encode( $newToken );
+                //return json_encode(compact($newToken));
+                //return 'tits';
+
+                //godamnit
+
+            }
+        } 
+        catch (JWTException $e) {
+            if ($e instanceof TokenExpiredException) {
+                return response()->json(['token_expired'], $e->getStatusCode());
+            } else if ($e instanceof TokenBlacklistedException) {
+                return response()->json(['token_blacklisted'], $e->getStatusCode());
+            } else if ($e instanceof TokenInvalidException) {
+                return response()->json(['token_invalid'], $e->getStatusCode());
+            } else if ($e instanceof PayloadException) {
+                return response()->json(['token_expired'], $e->getStatusCode());
+            } else if ($e instanceof JWTException) {
+                return response()->json(['token_invalid'], $e->getStatusCode());
+            }
+        }
+        return response()->json(['token_expired'], $e->getStatusCode());
     }
 }

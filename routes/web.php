@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,33 +34,43 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::post('auth/register', 'AuthController@register');
 Route::post('auth/login', 'AuthController@signIn');
-//Route::group(['middleware' => 'jwt.auth'], function () {
-  //  Route::get('user', 'AuthController@getAuthUser');
-//});
+Route::get('guzzle', 'GuzzleController@index');
 
-// Route::group(['domain' => 'dash.coolblueweb.net', 'middleware' => 'jwt.auth'], function () {
-//    Route::get('/r', function () {
-//        try {
-//            JWTAuth::parseToken()->toUser();
-//        } catch (Exception $e) {
-//            return Response::json(['error' => $e->getMessage()], HttpResponse::HTTP_UNAUTHORIZED);
-//        }
 
-//        return ['data' => 'This has come from a dedicated API subdomain with restricted access.'];
-//    });
-// });
+Route::group(['prefix' => 'api', 'before' => ['jwt.auth']], function()
+{
 
-Route::get('/restricted', [
-   'before' => 'jwt.auth',
-   function () {
-       $token = JWTAuth::getToken();
-       $user = JWTAuth::toUser($token);
+  //Route::get('d', 'AuthController@delegateToken');
 
-       return Response::json([
-           'data' => [
-               'email' => $user->email,
-               'registered_at' => $user->created_at->toDateTimeString()
-           ]
-       ]);
-   }
-]);
+  Route::post('r', 'AuthController@refresh');
+  Route::get('u', 'AuthController@getUser');
+
+});
+
+// Route::get('/restricted', [
+//    'before' => 'jwt.auth',
+//    function () {
+//         try {
+
+//           if (! $user = JWTAuth::parseToken()->authenticate()) {
+//               return response()->json(['user_not_found'], 404);
+//           }
+
+//       } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+
+//           return response()->json(['token_expired'], $e->getStatusCode());
+
+//       } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+
+//           return response()->json(['token_invalid'], $e->getStatusCode());
+
+//       } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+
+//           return response()->json(['token_absent'], $e->getStatusCode());
+
+//       }
+
+//       // the token is valid and we have found the user via the sub claim
+//       return response()->json(compact('user'));
+//    }
+// ]);

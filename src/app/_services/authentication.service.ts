@@ -9,8 +9,9 @@ export class AuthenticationService {
  
     constructor(private http: Http) {
         // set token if saved in local storage
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
+        //var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        let currentUser = localStorage.getItem('currentUser');
+        this.token = currentUser;
     }
  
     login(email: string, password: string): Observable<boolean> {
@@ -40,16 +41,22 @@ export class AuthenticationService {
                     return false;
                 }
             });
-        // return this.http.post({
-        //     url: '/auth/login',
-        //     method: "POST",
-        //     data: "email=" + email + "&password=" + password,
-        //     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        // }).success(function (data, status, headers, config) {
-        //     console.log(data);
-        // }).error(function (data, status, headers, config) {
-        //     console.log(data);
-        // });
+    }
+
+
+    delegateToken(): Observable<boolean> {
+
+        //let headers = new Headers({ 'Authorization': 'Bearer ' + this.token });
+        let headers = new Headers({ 'Authorization': 'Bearer ' + this.token });
+        headers.append('Content-Type', 'application/x-www-form-urlencoded');
+        let urlSearchParams = new URLSearchParams();
+        urlSearchParams.append('token', this.token);
+        let body = urlSearchParams.toString();
+         console.log(body);
+        
+        // send token to api for delegation
+        return this.http.post('/api/r', body, { headers: headers })
+            .map((response: Response) => response.json());
     }
  
     logout(): void {
