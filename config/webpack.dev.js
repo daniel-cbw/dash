@@ -112,7 +112,7 @@ module.exports = function (options) {
          */
         {
           test: /\.scss$/,
-          use: ['style-loader', 'css-loader', 'sass-loader'],
+          use: ['style-loader', 'raw-loader', 'sass-loader'],
           include: [helpers.root('src', 'styles')]
         },
 

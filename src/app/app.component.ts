@@ -15,9 +15,10 @@ import {
 @Component({
   selector: 'app',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: [
-    './app.component.css'
-  ],
+  // styleUrls: [
+  //   './app.component.scss'
+  // ],
+  styleUrls: ['../assets/scss/foundation-sites/scss/v6_init.scss'],
   templateUrl: 'app.component.html'
 })
 export class AppComponent implements OnInit {

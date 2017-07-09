@@ -19,15 +19,15 @@ export class AuthGuard implements CanActivate {
             // console.log('has token');
             // console.log('____');
             // console.log(localStorage.getItem('currentUser'));
-            this.authService.delegateToken()
-                .subscribe(user => {
-                    this.token = user;
-                 localStorage.setItem('currentUser', this.token );
-                    console.log(user);
-                    this.pass = true;
-                }
+            // this.authService.delegateToken()
+            //     .subscribe(user => {
+            //         this.token = user;
+            //      localStorage.setItem('currentUser', this.token );
+            //         console.log(user);
+            //         this.pass = true;
+            //     }
 
-            );
+            // );
 
             // if (this.pass) {
             //     return true;
