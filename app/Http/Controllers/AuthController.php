@@ -116,7 +116,8 @@ class AuthController extends Controller
                 $token = \JWTAuth::getToken();
 
                 $newToken = \JWTAuth::refresh($token);
-                return json_encode( $newToken );
+                //return json_encode( $newToken );
+                return response()->json(['t' => $newToken , 'status' => 200 ]);
                 //return json_encode(compact($newToken));
                 //return 'tits';
 

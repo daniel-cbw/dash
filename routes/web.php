@@ -42,7 +42,7 @@ Route::group(['prefix' => 'api', 'before' => ['jwt.auth']], function()
 
   //Route::get('d', 'AuthController@delegateToken');
 
-  Route::post('r', 'AuthController@refresh');
+  Route::post('d', 'AuthController@refresh');
   Route::get('u', 'AuthController@getUser');
 
 });

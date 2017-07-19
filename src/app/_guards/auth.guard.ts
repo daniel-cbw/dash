@@ -10,34 +10,40 @@ export class AuthGuard implements CanActivate {
     users: User[] = [];
     token: any;
     pass: boolean = false;
+    expired: boolean;
  
     constructor(private router: Router, private authService: AuthenticationService) { }
  
     canActivate() {
-        if (localStorage.getItem('currentUser')) {
-            // logged in so return true
-            // console.log('has token');
-            // console.log('____');
-            // console.log(localStorage.getItem('currentUser'));
-            // this.authService.delegateToken()
-            //     .subscribe(user => {
-            //         this.token = user;
-            //      localStorage.setItem('currentUser', this.token );
-            //         console.log(user);
-            //         this.pass = true;
-            //     }
 
-            // );
 
-            // if (this.pass) {
-            //     return true;
-            // }
-            // else {
-            //     this.router.navigate(['/login']);
-            // }
-             return true;
+        this.token = this.authService.token;
+        this.expired = this.authService.isTokenExpired();
+
+        if ( this.token ) {
+            
+            if (this.expired) {
+                var response: any = this.authService.delegateToken().subscribe(result => {
+                    console.log(localStorage.getItem('currentUser'));
+                    console.log(result);
+                    return result;
+                });
+
+                if ( response.status === 200 ) {
+                   this.authService.setToken( response.t );
+                   return true;
+                }
+                else {
+                    this.router.navigate(['/login']);
+                    return false;
+
+                }
+            }
+
+
+            return true;
         }
- 
+
         // not logged in so redirect to login page
         this.router.navigate(['/login']);
         return false;

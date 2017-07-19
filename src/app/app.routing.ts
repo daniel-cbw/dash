@@ -11,7 +11,7 @@ const appRoutes: Routes = [
     { path: 'foo', component: NoContentComponent, canActivate: [AuthGuard] },
  
     // otherwise redirect to home
-    { path: '**', redirectTo: '' }
+    { path: '**', redirectTo: 'login' }
 ];
  
 export const routing = RouterModule.forRoot(appRoutes, { useHash: true, preloadingStrategy: PreloadAllModules })

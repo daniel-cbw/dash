@@ -6,12 +6,17 @@ import { HttpModule } from '@angular/http';
 // used to create fake backend
 import { BaseRequestOptions } from '@angular/http';
 
+//import { AuthHttp, AuthConfig } from 'angular2-jwt';
+import { AuthHttp, AuthConfig, AUTH_PROVIDERS, provideAuth } from 'angular2-jwt';
+import { JwtHelper } from 'angular2-jwt';
+
 import { AppState, InternalStateType } from './app.service';
  
 import { AppComponent }  from './app.component';
 import { routing }        from './app.routing';
  
 import { AuthGuard } from './_guards/auth.guard';
+
 import { AuthenticationService } from './_services/authentication.service';
 import { UserService } from './_services/user.service';
 import { LoginComponent } from './login/login.component';
@@ -55,7 +60,15 @@ type StoreType = {
         AuthGuard,
         AuthenticationService,
         UserService,
- 
+         AuthHttp,
+        provideAuth({
+            headerName: 'Authorization',
+            headerPrefix: 'bearer',
+            tokenName: 'token',
+            tokenGetter: (() => localStorage.getItem('currentUser')),
+            globalHeaders: [{ 'Content-Type': 'application/json' }],
+            //noJwtError: true
+        }),
         // providers used to create fake backend
         //fakeBackendProvider,
        // MockBackend,

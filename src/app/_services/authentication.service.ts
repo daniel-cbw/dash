@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs';
+import { JwtHelper } from 'angular2-jwt';
 import 'rxjs/add/operator/map'
  
 @Injectable()
 export class AuthenticationService {
     public token: string;
+
+    jwtHelper: JwtHelper = new JwtHelper();
  
     constructor(private http: Http) {
         // set token if saved in local storage
@@ -41,10 +44,13 @@ export class AuthenticationService {
                     return false;
                 }
             });
+    } 
+
+    isTokenExpired(): boolean {
+        return this.jwtHelper.isTokenExpired(this.token);
     }
 
-
-    delegateToken(): Observable<boolean> {
+    delegateToken(): Observable<any> {
 
         //let headers = new Headers({ 'Authorization': 'Bearer ' + this.token });
         let headers = new Headers({ 'Authorization': 'Bearer ' + this.token });
@@ -52,11 +58,17 @@ export class AuthenticationService {
         let urlSearchParams = new URLSearchParams();
         urlSearchParams.append('token', this.token);
         let body = urlSearchParams.toString();
-         console.log(body);
+         //console.log(body);
         
         // send token to api for delegation
-        return this.http.post('/api/r', body, { headers: headers })
+        return this.http.post('/api/d', body, { headers: headers })
             .map((response: Response) => response.json());
+    }
+
+    setToken( token: string ): void {
+        this.token = token;
+        localStorage.setItem('currentUser', this.token );
+        console.log(localStorage.getItem('currentUser'));
     }
  
     logout(): void {
