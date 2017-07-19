@@ -65,6 +65,10 @@ export class AuthenticationService {
             .map((response: Response) => response.json());
     }
 
+    getToken(): string {
+        return this.token;
+    }
+
     setToken( token: string ): void {
         this.token = token;
         localStorage.setItem('currentUser', this.token );

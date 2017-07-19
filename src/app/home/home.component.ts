@@ -40,26 +40,26 @@ export class HomeComponent implements OnInit {
         //     }
         // );
 
-        var token = localStorage.getItem('currentUser');
+        // var token = localStorage.getItem('currentUser');
 
-            console.log(
-                this.jwtHelper.decodeToken(token),
-                this.jwtHelper.getTokenExpirationDate(token),
-                this.jwtHelper.isTokenExpired(token)
-            );
+        //     console.log(
+        //         this.jwtHelper.decodeToken(token),
+        //         this.jwtHelper.getTokenExpirationDate(token),
+        //         this.jwtHelper.isTokenExpired(token)
+        //     );
 
-            var msec: any = this.jwtHelper.getTokenExpirationDate(token);
-            console.log(msec);
-            var hh = Math.floor(msec / 1000 / 60 / 60);
-            msec -= hh * 1000 * 60 * 60;
-            console.log(msec);
-            var mm = Math.floor(msec / 1000 / 60);
-            msec -= mm * 1000 * 60;
-            console.log(msec);
-            var ss = Math.floor(msec / 1000);
-            msec -= ss * 1000;
-            console.log(msec);
-            console.log(localStorage.getItem('refresh_token'));
+        //     var msec: any = this.jwtHelper.getTokenExpirationDate(token);
+        //     console.log(msec);
+        //     var hh = Math.floor(msec / 1000 / 60 / 60);
+        //     msec -= hh * 1000 * 60 * 60;
+        //     console.log(msec);
+        //     var mm = Math.floor(msec / 1000 / 60);
+        //     msec -= mm * 1000 * 60;
+        //     console.log(msec);
+        //     var ss = Math.floor(msec / 1000);
+        //     msec -= ss * 1000;
+        //     console.log(msec);
+        //     console.log(localStorage.getItem('refresh_token'));
     }
 
     thing: object;
